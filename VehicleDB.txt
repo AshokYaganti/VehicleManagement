@@ -1,0 +1,607 @@
+create table registrations
+(rid int primary key identity(10000,1),
+dname varchar(50),
+username varchar(50),
+password varchar(50),
+email varchar(50),
+phone varchar(50),
+address varchar(400),
+state varchar(20),
+city varchar(30),
+zip varchar(10),
+role varchar(10),
+created_date datetime)
+
+----------------------------------------------------------------------------------------------------------------------- 1
+
+create  procedure sp_registrations
+(@name varchar(50),
+@username varchar(50),
+@password varchar(50),
+@email varchar(50),
+@phone varchar(50),
+@address varchar(400),
+@state varchar(50),
+@city varchar(50),
+@zip varchar(50),
+@role varchar(50),
+@rid int output)
+as
+begin
+insert into registrations values(@name,@username,@password,@email,@phone,@address,@state,@city,@zip,@role,GETDATE())
+SET @rid=SCOPE_IDENTITY()
+RETURN @rid
+end
+
+---------------------------------------------------------------------------------------------------------------------------2
+
+create procedure sp_username
+as
+begin
+select username from registrations
+end
+
+---------------------------------------------------------------------------------------------------------------------------3
+
+create table administrators
+(adminid int primary key identity(90000,1),
+ name varchar(50), 
+ password varchar(50),
+ email varchar(50),
+ role varchar(10),
+ created_date datetime)
+
+insert administrators values('Ram Krishana','P@ssw0rd','yagantiashok@gmail.com','A',GETDATE())
+
+-------------------------------------------------------------------------------------------------------------------------4
+
+create procedure sp_logindetails
+(@username varchar(50))
+ as
+ begin 
+   Declare @count int
+   Declare @admincount int   
+     select @count=COUNT(*) from registrations where username=@username 
+     select @admincount = COUNT(*) from administrators where CONVERT(varchar(50), adminid)=@username    
+       if @count>0
+		begin 
+		  select username as username,password as password,role as role,dname as name 
+		   from  registrations 
+		    where username=@username;
+		 end
+		 else if @admincount>0
+		 begin
+		   select adminid as username,password as password,role as role,name as name 
+		   from   administrators 
+		   where  CONVERT(varchar(50), adminid)=@username;
+		 end				
+end
+
+----------------------------------------------------------------------------------------------------------------------------5
+
+create table make_index
+(id varchar(10),
+ name varchar(20))
+
+--------------------------------------------------------------------------------------------------------------------------6
+ 
+ create table model_index
+ (id varchar(10),
+  make_id varchar(10),
+  name  varchar(20))
+  
+ -------------------------------------------------------------------------------------------------------------------------7
+  insert into make_index values('1','Acura');
+  insert into make_index values('2','BMW');
+  insert into make_index values('3','Buick');
+  insert into make_index values('4','Chevrolet');
+  insert into make_index values('5','Chrysler');
+  insert into make_index values('6','Dodge');
+  insert into make_index values('7','Ford');
+  insert into make_index values('8','GMC');
+  insert into make_index values('9','Honda');
+  insert into make_index values('10','Hyundai');
+  insert into make_index values('11','INFINITI');
+  insert into make_index values('12','Kia');
+  insert into make_index values('13','Lexus');
+  insert into make_index values('14','Nissan');
+  insert into make_index values('15','Toyota'); 
+  
+  
+  insert into model_index values('1','1','MDX');
+  insert into model_index values('2','1','RDX');
+  insert into model_index values('3','1','TL'); 
+  
+  insert into model_index values('4','2','X3 xDrive28i');
+  insert into model_index values('5','2','X4'); 
+  
+  insert into model_index values('6','3','Enclave');
+  insert into model_index values('7','3','Regal');  
+  
+  insert into model_index values('8','4','Cavalier');
+  insert into model_index values('9','4','Colorado');
+  insert into model_index values('10','4','Equinox');
+  insert into model_index values('11','4','Silverado 1500');
+ 
+  
+  insert into model_index values('12','5','Crossfire');
+  insert into model_index values('13','5','Town & Country'); 
+  
+  insert into model_index values('14','6','Ram 1500'); 
+  
+  insert into model_index values('15','7','Edge');
+  insert into model_index values('16','7','Escape');
+  insert into model_index values('17','7','Explorer');
+  insert into model_index values('18','7','F-150');
+  insert into model_index values('19','7','Focus');
+  insert into model_index values('20','7','Fusion');
+  insert into model_index values('21','7','Fusion Hybrid');
+  insert into model_index values('22','7','Mustang');
+  
+  insert into model_index values('23','8','Acadia');
+   
+  
+  insert into model_index values('24','9','Accord');
+  insert into model_index values('25','9','Accord Hybrid');
+  insert into model_index values('26','9','Civic');
+  insert into model_index values('27','9','CR-V');
+  insert into model_index values('28','9','Fit');
+  insert into model_index values('29','9','HR-V');
+  insert into model_index values('30','9','Odyssey');
+  insert into model_index values('31','9','Pilot');
+  
+  
+  insert into model_index values('32','10','Elantra');
+  insert into model_index values('33','10','Santa Fe');
+  insert into model_index values('34','10','Santa Fe Sport');
+  insert into model_index values('35','10','Sonata');
+   
+  insert into model_index values('36','11','G37x');
+    
+  insert into model_index values('37','12','Forte');
+  insert into model_index values('38','12','Optima');
+  insert into model_index values('39','12','Sorento');
+ 
+  
+  insert into model_index values('40','13','CT 200h');
+  insert into model_index values('41','13','ES 330');
+  insert into model_index values('42','13','IS 250');
+  insert into model_index values('43','13','LS 430');
+  insert into model_index values('44','13','RX 350');
+ 
+  insert into model_index values('45','14','Altima');
+  insert into model_index values('46','14','Murano');
+  insert into model_index values('47','14','Rogue');
+    
+  insert into model_index values('48','15','4Runner');
+  insert into model_index values('49','15','Avalon');
+  insert into model_index values('50','15','Camry');
+  insert into model_index values('51','15','Camry Solara');
+  insert into model_index values('52','15','Corolla');
+  insert into model_index values('53','15','FJ Cruiser');
+  insert into model_index values('54','15','Highlander');
+  insert into model_index values('55','15','Prius');
+  insert into model_index values('56','15','Prius c');
+  insert into model_index values('57','15','Prius v');
+  insert into model_index values('58','15','RAV4');
+  insert into model_index values('59','15','Sequoia');
+  insert into model_index values('60','15','Sienna');
+  insert into model_index values('61','15','Tacoma');
+  insert into model_index values('62','15','Tundra');
+  insert into model_index values('63','15','Yaris');
+
+---------------------------------------------------------------------------------------------------------------------------8
+
+ create table carimages
+(imageid int primary key identity(1,1),
+ inventoryid int,
+ photo image)  
+
+--------------------------------------------------------------------------------------------------------------------------9
+
+ create procedure sp_carimages
+ (@inventoryid int,
+ @photo image,
+ @imageid int output)
+ as
+ begin
+ insert into carimages values(@inventoryid,@photo)
+ SET @imageid=SCOPE_IDENTITY()
+ RETURN @imageid
+ end
+
+-------------------------------------------------------------------------------------------------------------------------10
+
+ create procedure sp_getmake
+ as
+ begin
+ select * from make_index
+ end
+ 
+------------------------------------------------------------------------------------------------------------------------11
+
+ create procedure sp_getModels
+ (@makeid varchar(10))
+ as
+ begin
+ select id, name from model_index where make_id=@makeid
+ end
+
+----------------------------------------------------------------------------------------------------------------------12
+
+ create table inventory
+(inventoryid int primary key identity(100,1),
+ username varchar(20),
+ type  varchar(20),
+ make varchar(5),
+ model varchar(5),
+ year varchar(10),
+ vin varchar(50),
+ milage varchar(50),
+ price varchar(20),
+ description nvarchar(max),
+ status varchar(20),
+ posted_date date)
+ 
+----------------------------------------------------------------------------------------------------------------------13
+
+ create procedure sp_addinventory
+ (@username varchar(20),
+ @type  varchar(20),
+ @make varchar(5),
+ @model varchar(5),
+ @year varchar(10),
+ @vin varchar(50),
+ @milage varchar(50),
+ @price varchar(20),
+ @description nvarchar(max),
+ @inventoryid int output)
+as
+begin
+insert into inventory values(@username,@type,@make,@model,@year,@vin,@milage,@price,@description,'OPEN',GETDATE())
+SET @inventoryid=SCOPE_IDENTITY()
+RETURN @inventoryid
+end 
+
+---------------------------------------------------------------------------------------------------------------------14
+
+create procedure sp_getinventory
+(@username varchar(50))
+as
+begin
+select a.inventoryid,
+       a.username,
+       case when a.type='USED' then 'Used Car' else 'New Car' end type,
+       b.name make,
+       c.name model,
+       a.year,
+       a.vin,
+       a.milage,
+       a.price,
+       a.description,
+       a.status,
+       a.posted_date
+ from inventory a,
+      make_index b,
+      model_index c
+   where a.username=@username
+     and a.make=b.id
+     and a.model=c.id      
+end
+
+---------------------------------------------------------------------------------------------------------------------------15
+
+create procedure sp_updateinventory
+(@price varchar(20),
+@inventoryid varchar(20))
+as
+begin
+update inventory
+ set price=@price
+  where inventoryid=@inventoryid
+end
+
+---------------------------------------------------------------------------------------------------------------------------16
+
+create procedure sp_deleteinventory
+(@inventoryid varchar(20))
+as
+begin
+delete inventory where inventoryid=@inventoryid
+end
+
+--------------------------------------------------------------------------------------------------------------------------17
+
+create procedure sp_getallinventory
+as
+begin
+select a.inventoryid,
+       a.username,
+       case when a.type='USED' then 'Used Car' else 'New Car' end type,
+       b.name make,
+       c.name model,
+       a.year,
+       a.vin,
+       a.milage,
+       a.price,
+       a.description,
+       a.status,
+       a.posted_date,
+       d.dname
+ from inventory a,
+      make_index b,
+      model_index c,
+      registrations d
+   where (a.status!='DECLINED' or a.status!='DELETED' or a.status!='SOLD' )
+     and a.make=b.id
+     and a.model=c.id 
+     and a.username=d.username     
+end
+
+-------------------------------------------------------------------------------------------------------------------------18
+
+create procedure sp_getdeletedinventory
+as
+begin
+select a.inventoryid,
+       a.username,
+       case when a.type='USED' then 'Used Car' else 'New Car' end type,
+       b.name make,
+       c.name model,
+       a.year,
+       a.vin,
+       a.milage,
+       a.price,
+       a.description,
+       a.status,
+       a.posted_date,
+       d.dname
+ from inventory a,
+      make_index b,
+      model_index c,
+      registrations d
+   where (a.status='DECLINED' or a.status='DELETED')
+     and a.make=b.id
+     and a.model=c.id 
+     and a.username=d.username     
+end
+
+----------------------------------------------------------------------------------------------------------------------19
+ 
+create procedure sp_changpassword
+(@username varchar(50),
+@password varchar(20))
+as
+begin
+update administrators
+ set password=@password
+   where adminid=@username
+end
+
+--------------------------------------------------------------------------------------------------------------------20
+
+create procedure sp_registeredusers
+as
+begin
+select dname,username,email,phone,address,state,city,zip,
+       case when role='C' then 'Customer' else 'Sales Person' end role,
+       created_date 
+   from registrations
+end
+
+
+-----------------------------------------------------------------------------------------------------------------21
+
+create procedure sp_approveinventory
+(@status varchar(20),
+@inventoryid varchar(20))
+as 
+begin
+update inventory set status=@status
+  where inventoryid=@inventoryid
+end
+
+-----------------------------------------------------------------------------------------------------------------22
+
+create procedure sp_searchinventory
+(@inventorytype varchar(20),
+ @make varchar(30),
+ @model varchar(30))
+ as
+ begin
+  select distinct a.inventoryid,a.username,case when a.type='USED' then 'Used Car' else 'New Car' end type,
+         b.name make,c.name model, a.year, a.vin,a.milage,a.price,a.posted_date,a.description,
+         d.dname,d.email,d.phone     
+   from inventory a,
+        make_index b,
+        model_index c,
+        registrations d       
+     where d.role='S'
+       and a.username=d.username
+       and a.make=b.id
+       and a.model=c.id      
+       and (a.type = ISNULL(@inventorytype, a.type)
+            OR COALESCE(@inventorytype, a.type, '') = '')
+       and (a.make = ISNULL(@make, a.make)
+           OR COALESCE(@make, a.make, '') = '')
+       and (a.model = ISNULL(@model, a.model)
+           OR COALESCE(@model, a.model, '') = '')
+       and (a.status!='DECLINED' or a.status!='DELETED' or a.status!='SOLD')
+ end 
+
+----------------------------------------------------------------------------------------------------------------23
+
+ create procedure sp_getmoreinventory
+(@inventoryid varchar(20))
+ as
+ begin
+  select distinct a.inventoryid,a.username,case when a.type='USED' then 'Used Car' else 'New Car' end type,
+         b.name make,c.name model, a.year, a.vin,a.milage,a.price,a.posted_date,a.description,
+         d.dname,d.email,d.phone     
+   from inventory a,
+        make_index b,
+        model_index c,
+        registrations d       
+     where d.role='S'
+       and a.username=d.username
+       and a.make=b.id
+       and a.model=c.id      
+       and a.inventoryid=@inventoryid
+ end
+
+-----------------------------------------------------------------------------------------------------------------24
+
+ create procedure sp_getimages
+ (@inventoryid int)
+ as
+ begin
+ select * from carimages where inventoryid=@inventoryid
+ end
+
+----------------------------------------------------------------------------------------------------------------25
+
+create table bookmarks
+(username varchar(50),
+inventoryid varchar(20))
+
+----------------------------------------------------------------------------------------------------------------26
+
+create procedure sp_bookmarks
+(@username varchar(50),
+@inventoryid varchar(20))
+as
+begin
+insert into bookmarks values(@username,@inventoryid)
+end
+
+---------------------------------------------------------------------------------------------------------------27
+
+create table salespersoncontact
+(username varchar(50),
+inventoryid varchar(20),
+comment nvarchar(max))
+
+--------------------------------------------------------------------------------------------------------------28
+
+create procedure sp_salespersoncontact
+(@username varchar(50),
+@inventoryid varchar(20),
+@comment nvarchar(max))
+as
+begin
+insert into salespersoncontact values(@username,@inventoryid,@comment)
+end
+
+-------------------------------------------------------------------------------------------------------------29
+
+create procedure sp_bookmarkcount
+(@username varchar(50),
+@inventoryid varchar(20))
+as
+begin
+select COUNT(*) bcount from bookmarks where username=@username and inventoryid=@inventoryid
+end
+
+------------------------------------------------------------------------------------------------------------30
+
+create procedure sp_myaccount
+(@username varchar(50))
+as
+begin
+select * from registrations where username=@username
+end
+
+------------------------------------------------------------------------------------------------------------31
+
+create procedure sp_updateaccount
+(@username varchar(50),
+@emailid varchar(50),
+@phone varchar(20))
+as
+begin
+update registrations set email=@emailid, phone=@phone where username=@username
+end
+
+-------------------------------------------------------------------------------------------------------------32
+
+create procedure sp_getBookmarkInventory
+(@customerid varchar(50))
+as
+begin
+select a.inventoryid,
+       a.username,
+       case when a.type='USED' then 'Used Car' else 'New Car' end type,
+       b.name make,
+       c.name model,
+       a.year,
+       a.vin,
+       a.milage,
+       a.price,
+       a.description,
+       a.status,
+       a.posted_date,
+       d.dname
+ from inventory a,
+      make_index b,
+      model_index c,
+      registrations d,
+      bookmarks e
+   where a.make=b.id
+     and a.model=c.id 
+     and a.username=d.username 
+     and a.inventoryid=e.inventoryid
+     and e.username=@customerid    
+end
+
+--------------------------------------------------------------------------------------------------------------33
+
+create procedure sp_getComments
+(@inventoryid varchar(20))
+as
+begin
+select a.dname,a.email,a.phone,b.comment
+  from registrations a,
+       salespersoncontact b
+    where a.username=b.username
+      and b.inventoryid=@inventoryid
+end
+
+------------------------------------------------------------------------------------------------------------34
+
+create procedure sp_sellinventory
+(@inventoryid varchar(20))
+as
+begin
+update inventory set status='SOLD' where inventoryid=@inventoryid
+end
+
+----------------------------------------------------------------------------------------------------------35
+
+create procedure sp_soldInventory
+(@inventoryid varchar(20))
+as
+begin
+select a.inventoryid,
+       a.username,
+       case when a.type='USED' then 'Used Car' else 'New Car' end type,
+       b.name make,
+       c.name model,
+       a.year,
+       a.vin,
+       a.milage,
+       a.price,
+       a.description,
+       a.status,
+       a.posted_date,
+       d.dname
+ from inventory a,
+      make_index b,
+      model_index c,
+      registrations d
+   where a.status='SOLD' 
+     and a.make=b.id
+     and a.model=c.id 
+     and a.username=d.username     
+end
+
+---------------------------------------------------------------------------------------------------------------36
